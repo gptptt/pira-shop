@@ -1,0 +1,1 @@
+@extends('shared.components.profile.edit', ['layout' => 'layouts.admin']) 

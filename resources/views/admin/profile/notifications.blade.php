@@ -1,0 +1,1 @@
+@extends('shared.components.profile.notifications', ['layout' => 'layouts.admin']) 

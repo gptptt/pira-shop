@@ -1,0 +1,1 @@
+@extends('shared.components.profile.password', ['layout' => 'layouts.admin']) 

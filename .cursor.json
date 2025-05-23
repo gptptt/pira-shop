@@ -1,0 +1,20 @@
+{
+    "rules": [
+      {
+        "pattern": "^php (.*)$",
+        "replacement": "docker exec -it --user www-data app_php_8.4 bash -c 'cd /var/www/pirago-workshop && php $1'"
+      },
+      {
+        "pattern": "^npm (.*)$",
+        "replacement": "docker exec -it node sh -c 'cd /var/www/pirago-workshop && npm $1'"
+      },
+      {
+        "pattern": "^msql (.*)$",
+        "replacement": "docker exec -it mysql bash -c 'mysql $1'"
+      },
+      {
+        "pattern": "^composer (.*)$",
+        "replacement": "docker exec -it --user www-data app_php_8.4 bash -c 'cd /var/www/pirago-workshop && composer $1'"
+      }
+    ]
+}
