@@ -28,7 +28,9 @@ class OrderItem extends Model
     ];
 
     /**
-     * Get the order that owns the item.
+     * Defines the relationship to the parent Order of this order item.
+     *
+     * @return BelongsTo The associated Order model.
      */
     public function order(): BelongsTo
     {
@@ -36,7 +38,9 @@ class OrderItem extends Model
     }
 
     /**
-     * Get the product that the item refers to.
+     * Defines the relationship to the product associated with this order item.
+     *
+     * @return BelongsTo The related Product model.
      */
     public function product(): BelongsTo
     {
@@ -44,7 +48,9 @@ class OrderItem extends Model
     }
 
     /**
-     * Get the pricing plan that the item refers to.
+     * Defines the relationship to the pricing plan associated with this order item.
+     *
+     * @return BelongsTo The related PricingPlan model.
      */
     public function pricingPlan(): BelongsTo
     {
