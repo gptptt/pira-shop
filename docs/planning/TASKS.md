@@ -55,7 +55,7 @@
 - [x] Create product visibility options
 
 ### Order Management
-- [ ] Create Order and OrderItem models
+- [x] Create Order and OrderItem models
 - [ ] Implement order creation process
 - [ ] Develop order status management
 - [ ] Create order history functionality
