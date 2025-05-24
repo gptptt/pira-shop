@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Applies schema changes to ensure the `order_items` table exists with required columns and relationships.
+     *
+     * Creates the `order_items` table with appropriate columns and foreign key constraints if it does not exist. If the table already exists, adds any missing columns (`product_id`, `pricing_plan_id`, `quantity`, `name`, `description`) only if they are absent and their referenced tables exist.
      */
     public function up(): void
     {
@@ -48,7 +50,9 @@ return new class extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Removes the 'name' and 'description' columns from the 'order_items' table if it exists.
+     *
+     * This method does not drop the entire table, preserving existing data and structure.
      */
     public function down(): void
     {

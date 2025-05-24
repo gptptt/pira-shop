@@ -33,7 +33,9 @@ class Order extends Model
     ];
 
     /**
-     * Get the user that owns the order.
+     * Defines the relationship to the user who placed the order.
+     *
+     * @return BelongsTo The user associated with this order.
      */
     public function user(): BelongsTo
     {
@@ -41,7 +43,9 @@ class Order extends Model
     }
 
     /**
-     * Get the items for the order.
+     * Defines a one-to-many relationship to the order items associated with this order.
+     *
+     * @return HasMany The related order items.
      */
     public function items(): HasMany
     {

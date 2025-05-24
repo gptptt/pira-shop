@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Applies the migration to create the "orders" table or add missing columns if the table already exists.
+     *
+     * If the "orders" table does not exist, it is created with user association, status fields, total amount, billing information, notes, and timestamps. If the table exists, any missing billing, status, or notes columns are added.
      */
     public function up(): void
     {
@@ -67,7 +69,9 @@ return new class extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Removes billing and notes columns from the "orders" table without dropping the table.
+     *
+     * This reverses the migration by deleting the billing-related and notes fields added in the `up` method, preserving the core structure of the "orders" table.
      */
     public function down(): void
     {
