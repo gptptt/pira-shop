@@ -7,27 +7,44 @@
         'subtitle' => 'Welcome back, ' . auth()->user()->first_name . '!'
     ])
         @slot('actions')
-            <div class="relative inline-block text-left" x-data="{ open: false }">
+            <div class="relative inline-block text-left" x-data="{ open: false, exportType: 'orders' }">
                 <button @click="open = !open" type="button" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     <i class="fas fa-download mr-2"></i> Export
                     <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                     </svg>
                 </button>
+                
                 <div x-show="open" 
                     @click.away="open = false"
-                    class="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10" 
+                    class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10" 
                     role="menu" 
                     aria-orientation="vertical">
                     <div class="py-1">
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">CSV</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Excel</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">PDF</a>
+                        <div class="px-3 py-2 border-b border-gray-200">
+                            <label for="exportDataType" class="block text-sm font-medium text-gray-700 mb-1">Export data:</label>
+                            <select x-model="exportType" id="exportDataType" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                <option value="orders">Orders</option>
+                                <option value="customers">Customers</option>
+                                <option value="revenue">Revenue</option>
+                                <option value="products">Products</option>
+                            </select>
+                        </div>
+                        <a :href="'{{ route('admin.export.csv') }}?type=' + exportType" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                            <i class="fas fa-file-csv mr-2"></i> Export as CSV
+                        </a>
+                        <a :href="'{{ route('admin.export.excel') }}?type=' + exportType" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                            <i class="fas fa-file-excel mr-2"></i> Export as Excel
+                        </a>
+                        <a :href="'{{ route('admin.export.pdf') }}?type=' + exportType" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                            <i class="fas fa-file-pdf mr-2"></i> Export as PDF
+                        </a>
                     </div>
                 </div>
             </div>
             
-            <button type="button" class="inline-flex items-center px-3 py-2 border border-indigo-500 shadow-sm text-sm font-medium rounded-md text-indigo-600 bg-white hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <button type="button" class="inline-flex items-center px-3 py-2 border border-indigo-500 shadow-sm text-sm font-medium rounded-md text-indigo-600 bg-white hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" 
+                   onclick="refreshDashboard()">
                 <i class="fas fa-sync-alt mr-2"></i> Refresh
             </button>
         @endslot
@@ -230,4 +247,62 @@
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    function refreshDashboard() {
+        // Show loading indicator
+        const refreshBtn = document.querySelector('button i.fa-sync-alt');
+        refreshBtn.classList.add('fa-spin');
+        
+        // Fetch fresh data
+        fetch('{{ route('admin.dashboard.refresh') }}')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success message
+                    const message = document.createElement('div');
+                    message.className = 'fixed bottom-4 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded z-50';
+                    message.innerHTML = `
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle mr-2"></i>
+                            <span>${data.message}</span>
+                        </div>
+                    `;
+                    document.body.appendChild(message);
+                    
+                    // Remove message after 3 seconds
+                    setTimeout(() => {
+                        message.remove();
+                    }, 3000);
+                    
+                    // Reload the page to show updated data
+                    // In a more advanced implementation, we would update the charts and tables with the new data
+                    // without reloading the page
+                    location.reload();
+                }
+            })
+            .catch(error => {
+                console.error('Error refreshing dashboard:', error);
+                
+                // Show error message
+                const message = document.createElement('div');
+                message.className = 'fixed bottom-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded z-50';
+                message.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-circle mr-2"></i>
+                        <span>Failed to refresh dashboard data.</span>
+                    </div>
+                `;
+                document.body.appendChild(message);
+                
+                // Remove message after 3 seconds
+                setTimeout(() => {
+                    message.remove();
+                }, 3000);
+            })
+            .finally(() => {
+                // Stop spinning the refresh icon
+                refreshBtn.classList.remove('fa-spin');
+            });
+    }
+</script>
 @endpush 

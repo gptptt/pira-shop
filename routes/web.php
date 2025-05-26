@@ -63,6 +63,12 @@ Route::prefix('admin')->group(function () {
     // Admin Dashboard & Protected Routes
     Route::middleware(['admin'])->group(function () {
         Route::get('dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+        Route::get('dashboard/refresh', [AdminController::class, 'refresh'])->name('admin.dashboard.refresh');
+        
+        // Dashboard Export Routes
+        Route::get('export/csv', [\App\Http\Controllers\Admin\ExportController::class, 'exportCsv'])->name('admin.export.csv');
+        Route::get('export/excel', [\App\Http\Controllers\Admin\ExportController::class, 'exportExcel'])->name('admin.export.excel');
+        Route::get('export/pdf', [\App\Http\Controllers\Admin\ExportController::class, 'exportPdf'])->name('admin.export.pdf');
         
         // Users Management
         Route::resource('users', \App\Http\Controllers\Admin\UserController::class)->names('admin.users');

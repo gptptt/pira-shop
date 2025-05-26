@@ -76,7 +76,7 @@
 - [x] Create new customer metrics
 - [x] Set up revenue reporting
 - [x] Implement subscription status tracking
-- [ ] Create data export functionality
+- [x] Create data export functionality
 
 ### Content Management
 - [ ] Create Post model
