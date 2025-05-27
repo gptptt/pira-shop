@@ -53,6 +53,46 @@ class AdminController extends Controller
     }
     
     /**
+     * Refresh the dashboard data (used for AJAX updates).
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function refresh()
+    {
+        // Mock data for demonstration purposes
+        // In a real application, these would come from database queries
+        
+        // Dashboard stats
+        $data = [
+            'totalCustomers' => User::whereHas('roles', function($query) {
+                $query->where('name', 'customer');
+            })->count(),
+            'monthlyRevenue' => 12500.75,
+            'activeSubscriptions' => 85,
+            'pendingOrders' => 7,
+            
+            // Revenue chart data - last 12 months
+            'revenueData' => [5200, 6100, 7800, 8900, 9100, 10200, 11500, 12200, 11800, 13100, 14200, 12500],
+            
+            // New customers data - last 6 months
+            'newCustomersData' => [24, 18, 31, 27, 36, 42],
+            
+            // Recent orders
+            'recentOrders' => $this->getMockOrders()->toArray(),
+            
+            // Top products
+            'topProducts' => $this->getMockProducts()->toArray(),
+        ];
+        
+        return response()->json([
+            'success' => true,
+            'data' => $data,
+            'message' => 'Dashboard data refreshed successfully',
+            'timestamp' => now()->toDateTimeString()
+        ]);
+    }
+    
+    /**
      * Get mock order data for demonstration purposes.
      *
      * @return array
